@@ -9,8 +9,11 @@ import org.kuali.ole.docstore.indexer.solr.DocumentLocalId;
 import org.kuali.ole.docstore.model.bo.WorkBibDocument;
 import org.kuali.ole.select.bo.OLESerialReceivingDocument;
 import org.kuali.ole.select.bo.OLESerialReceivingHistory;
+import org.kuali.ole.sys.context.SpringContext;
+import org.kuali.ole.sys.service.impl.OleParameterConstants;
 import org.kuali.rice.core.api.config.property.ConfigContext;
 import org.kuali.rice.core.api.util.tree.Tree;
+import org.kuali.rice.coreservice.framework.parameter.ParameterService;
 import org.kuali.rice.krad.service.BusinessObjectService;
 import org.kuali.rice.krad.service.KRADServiceLocator;
 import org.kuali.rice.krad.web.form.UifFormBase;
@@ -173,6 +176,7 @@ public class EditorForm extends UifFormBase {
     private boolean supressHoldingsShelving = false;
     private boolean supressItemShelving = false;
     private boolean addSpaceField;
+    private String enableAccessionNumberGeneration;
 
     public boolean isAddSpaceField() {
         return addSpaceField;
@@ -1273,5 +1277,18 @@ public class EditorForm extends UifFormBase {
 
     public void setSupressItemShelving(boolean supressItemShelving) {
         this.supressItemShelving = supressItemShelving;
+    }
+
+    public String getEnableAccessionNumberGeneration() {
+        List<String> parameterValues = new ArrayList<String>(SpringContext.getBean(ParameterService.class)
+                .getParameterValuesAsString(OleParameterConstants.FINANCIAL_SYSTEM_ALL.class, "ENABLE_ACCESSION_NUM"));
+        if (parameterValues.get(0).equals("Y")) {
+            return "true";
+        }
+        return "false";
+    }
+
+    public void setEnableAccessionNumberGeneration(String enableAccessionNumberGeneration) {
+        this.enableAccessionNumberGeneration = enableAccessionNumberGeneration;
     }
 }

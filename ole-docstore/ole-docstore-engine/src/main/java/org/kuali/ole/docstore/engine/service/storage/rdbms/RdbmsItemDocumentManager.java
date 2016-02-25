@@ -9,6 +9,7 @@ import org.kuali.ole.audit.Audit;
 import org.kuali.ole.audit.ItemAudit;
 import org.kuali.ole.audit.OleAuditManager;
 import org.kuali.ole.docstore.DocStoreConstants;
+import org.kuali.ole.docstore.accessionnumber.AccessionNumberManager;
 import org.kuali.ole.docstore.common.constants.DocstoreConstants;
 import org.kuali.ole.docstore.common.document.Bib;
 import org.kuali.ole.docstore.common.document.Holdings;
@@ -44,6 +45,8 @@ import org.kuali.ole.utility.OleHttpRestClient;
 import org.kuali.rice.core.api.CoreApiServiceLocator;
 import org.kuali.rice.core.api.config.property.ConfigContext;
 import org.kuali.rice.core.api.datetime.DateTimeService;
+import org.kuali.rice.krad.util.GlobalVariables;
+import org.kuali.rice.krad.util.KRADConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.commons.collections.CollectionUtils;
@@ -174,6 +177,7 @@ public class RdbmsItemDocumentManager extends RdbmsHoldingsDocumentManager imple
         setItemProperties(itemRecord, item);
         String content =  itemOlemlRecordProcessor.toXML(item);
         itemDocument.setContent(content);
+        itemDocument.setAccessionNumber(item.getAccessionNumber());
         try {
             oldItemRecord = processItemRecordForAudit(oldItemRecord);
             ItemRecord modifiedItemRecord = (ItemRecord) SerializationUtils.clone(itemRecord);
@@ -254,6 +258,7 @@ public class RdbmsItemDocumentManager extends RdbmsHoldingsDocumentManager imple
             }
         }
 
+        item.setAccessionNumber(itemRecord.getAccessionNumber());
         AccessInformation accessInformation = new AccessInformation();
         accessInformation.setBarcode(itemRecord.getBarCode());
         Uri itemuri = new Uri();
@@ -657,6 +662,7 @@ public class RdbmsItemDocumentManager extends RdbmsHoldingsDocumentManager imple
             itemDoc.setHoldings(holdingsList);
             itemDoc.setAnalytic(true);
         }
+        itemDoc.setAccessionNumber(itemRecord.getAccessionNumber());
         return itemDoc;
     }
 
@@ -986,6 +992,20 @@ public class RdbmsItemDocumentManager extends RdbmsHoldingsDocumentManager imple
             itemRecord.setDonorList(saveItemDonorList(item.getDonorInfo(), itemRecord.getItemId()));
         }
         itemRecord.setNumberOfRenew(item.getNumberOfRenew());
+        if (item.isGenerateAccessionNumber()) {
+            if (item.getAccessionNumberType().equals("<no type>")) {
+                GlobalVariables.getMessageMap().putError(KRADConstants.GLOBAL_ERRORS, "docstore.response",
+                        "Accession Number Error: Choose a type for accession number generation");
+            } else {
+                AccessionNumberManager accessionNumberManager = new AccessionNumberManager();
+                AccessionNumber accessionNumber = null;
+                accessionNumber = accessionNumberManager.generateAccessionNumber(itemRecord,
+                        item.getAccessionNumberType());
+                item.setAccessionNumber(accessionNumber.toString());
+                accessionNumberManager.saveAccessionNumber(accessionNumber);
+            }
+        }
+        itemRecord.setAccessionNumber(item.getAccessionNumber());
         getBusinessObjectService().save(itemRecord);
     }
 

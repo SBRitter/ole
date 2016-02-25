@@ -557,11 +557,13 @@
           p:fieldBindingObjectPath="documentForm.selectedItem">
         <property name="headerText" value="Acquisition Information"/>
         <property name="layoutManager">
-            <bean parent="Uif-GridLayoutBase" p:numberOfColumns="2"/>
+            <bean parent="Uif-GridLayoutBase" p:numberOfColumns="1"/>
         </property>
         <property name="items">
             <list>
                 <ref bean="oleAcquisitionFieldGroup1"/>
+                <ref bean="oleAccesionNumberDisplayGrid" />
+                <ref bean="oleAccesionNumberGenerateGrid" />
                 <!--<bean parent="Uif-VerticalFieldGroup">
                     <property name="items">
                         <list>
@@ -596,6 +598,44 @@
                       p:required="false">
                     <property name="control">
                         <bean parent="Uif-TextControl" p:size="18" p:maxLength="100"/>
+                    </property>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <!-- Display field for accession number -->
+    <bean id="oleAccesionNumberDisplayGrid" parent="Uif-GridSubSection" p:layoutManager.numberOfColumns="2" p:render="@{enableAccessionNumber eq 'true'}">
+        <property name="items">
+            <list>
+                <bean id="accessionNumber" parent="Uif-InputField" p:propertyName="accessionNumber"
+                      p:label="Accession Number" p:required="false">
+                    <property name="control">
+                        <bean parent="Uif-TextControl" p:size="30" p:maxLength="" p:disabled="false"/>
+                    </property>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <!-- Input fields for accession number generation -->
+    <bean id="oleAccesionNumberGenerateGrid" parent="Uif-GridSubSection" p:layoutManager.numberOfColumns="2" p:render="@{enableAccessionNumber eq 'true'}">
+        <property name="items">
+            <list>
+                <bean id="generateAccessionNumber" parent="Uif-InputField" p:propertyName="generateAccessionNumber"
+                      p:label="Generate New Accession Number?" p:required="false">
+                    <property name="control">
+                        <bean parent="Uif-CheckboxControl"/>
+                    </property>
+                </bean>
+
+                <bean id="accessionNumberType" parent="Uif-InputField" p:propertyName="accessionNumberType"
+                      p:label="Accession Number Type" p:required="false">
+                    <property name="control">
+                        <bean parent="Uif-DropdownControl" p:cssClasses="dropdown"/>
+                    </property>
+                    <property name="optionsFinder">
+                        <bean class="org.kuali.ole.describe.keyvalue.AccessionNumberType"/>
                     </property>
                 </bean>
             </list>

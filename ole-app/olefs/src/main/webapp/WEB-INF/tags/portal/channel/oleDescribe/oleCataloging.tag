@@ -37,6 +37,7 @@
    <%-- <portal:portalLink displayTitle="true" title="Call Number Browse"
                        url="${ConfigProperties.application.url}/ole-kr-krad/callnumberBrowseController?viewId=CallNumberBrowseView&methodToCall=start"/> <br/>
 --%>
-
+    <portal:portalLink displayTitle="true"   title="Accession Number Type"
+                       url="${ConfigProperties.application.url}/ole-kr-krad/lookup?methodToCall=start&dataObjectClassName=org.kuali.ole.describe.bo.OleAccessionNumberType&returnLocation=${ConfigProperties.application.url}/portal.do&hideReturnLink=true&showMaintenanceLinks=true"/><br/>
 </div>
 <channel:portalChannelBottom/>

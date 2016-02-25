@@ -68,7 +68,8 @@ import java.util.Map;
         "callNumber",
         "holding",
         "isAnalytic",
-        "holdings"
+        "holdings",
+        "accessionNumber"
 })
 @XmlRootElement(name = "itemDoc")
 
@@ -126,6 +127,7 @@ public class Item
     public static final String DESTINATION_FIELD_ITEM_VENDOR_LINE_ITEM_IDENTIFIER = "Vendor Line Item Identifier";
     public static final String DUE_DATE_TIME = "DUE_DATE_TIME";
     public static final String NO_OF_RENEWAL = "NO_OF_RENEWAL";
+    public static final String ACCESSION_NUMBER = "ACCESSIONNUMBER";
 
     @XmlTransient
     private String holdingsCallNumber;
@@ -197,6 +199,8 @@ public class Item
     protected String level4Location;
     @XmlTransient
     protected String level5Location;
+
+    private String accessionNumber;
 
     public String getLevel1Location() {
         return level1Location;
@@ -1248,5 +1252,13 @@ public class Item
         if (locationLevel == null || org.apache.commons.lang.StringUtils.isEmpty(locationLevel.getLevel())) return null;
         if (locationLevel.getLevel().equalsIgnoreCase(level)) return locationLevel.getName();
         return getLocationLevelName(locationLevel.getLocationLevel(), level);
+    }
+
+    public String getAccessionNumber() {
+        return accessionNumber;
+    }
+
+    public void setAccessionNumber(String accessionNumber) {
+        this.accessionNumber = accessionNumber;
     }
 }

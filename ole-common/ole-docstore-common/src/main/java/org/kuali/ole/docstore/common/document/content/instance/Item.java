@@ -131,7 +131,8 @@ import java.util.List;
     "itemClaimsReturnedRecords",
     "itemDamagedRecords",
     "missingPieceItemRecordList",
-    "originalDueDate"
+    "originalDueDate",
+    "accessionNumber"
 })
 @XStreamAlias("item")
 @XmlRootElement(name = "item")
@@ -228,6 +229,10 @@ public class Item {
     @XmlAttribute
     @XStreamAsAttribute
     protected String resourceIdentifier;
+    @XmlAttribute
+    protected String accessionNumber;
+    private String accessionNumberType;
+    private boolean generateAccessionNumber;
 
     public String getLoanDueDate() {
         return loanDueDate;
@@ -1255,5 +1260,30 @@ public class Item {
 
     public void setOriginalDueDate(String originalDueDate) {
         this.originalDueDate = originalDueDate;
+    }
+
+    public String getAccessionNumberType() {
+        return accessionNumberType;
+    }
+
+    public void setAccessionNumberType(String accessionNumberType) {
+        this.accessionNumberType = accessionNumberType;
+    }
+
+    public String getAccessionNumber() {
+        return accessionNumber;
+    }
+
+    public void setAccessionNumber(String accessionNumber) {
+        this.accessionNumber = accessionNumber;
+    }
+
+
+    public boolean isGenerateAccessionNumber() {
+        return generateAccessionNumber;
+    }
+
+    public void setGenerateAccessionNumber(boolean generateAccessionNumber) {
+        this.generateAccessionNumber = generateAccessionNumber;
     }
 }

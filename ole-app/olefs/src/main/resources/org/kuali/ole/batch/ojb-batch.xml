@@ -841,6 +841,7 @@
         <collection-descriptor name="missingPieceItemRecordList" proxy="true" element-class-ref="org.kuali.ole.docstore.engine.service.storage.rdbms.pojo.MissingPieceItemRecord" collection-class="org.apache.ojb.broker.util.collections.ManageableArrayList" auto-retrieve="true" auto-update="none" auto-delete="none">
             <inverse-foreignkey field-ref="itemId" />
         </collection-descriptor>
+        <field-descriptor name="accessionNumber" column="ACC_NUMBER" jdbc-type="VARCHAR"/>
     </class-descriptor>
 
 
@@ -1045,6 +1046,14 @@
         <field-descriptor name="missingPieceFlagNote" column="MISSING_PIECE_NOTE" jdbc-type="VARCHAR"/>
         <field-descriptor name="missingPieceCount" column="MISSING_PIECE_COUNT" jdbc-type="VARCHAR"/>
         <field-descriptor name="missingPieceDate" column="MISSING_PIECE_DATE" jdbc-type="TIMESTAMP"/>
+    </class-descriptor>
+
+    <class-descriptor class="org.kuali.ole.docstore.common.document.content.instance.AccessionNumber" table="OLE_ACC_NUM">
+        <field-descriptor name="code" column="code" jdbc-type="VARCHAR" primarykey="true" />
+        <field-descriptor name="name" column="name" jdbc-type="VARCHAR" />
+        <field-descriptor name="counter" column="counter" jdbc-type="INTEGER" primarykey="false" />
+        <field-descriptor name="year" column="year" jdbc-type="VARCHAR" primarykey="false" />
+        <field-descriptor name="syntax" column="syntax" jdbc-type="VARCHAR" primarykey="false" />
     </class-descriptor>
 
 </descriptor-repository>

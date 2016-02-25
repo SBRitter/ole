@@ -526,7 +526,13 @@
         <field-descriptor name="versionNumber" column="VER_NBR" jdbc-type="BIGINT" locking="true"/>
     </class-descriptor>
 
-
+    <class-descriptor class="org.kuali.ole.describe.bo.OleAccessionNumberType" table="OLE_ACC_NUM">
+        <field-descriptor name="code" column="code" jdbc-type="VARCHAR" primarykey="true"/>
+        <field-descriptor name="name" column="name" jdbc-type="VARCHAR"/>
+        <field-descriptor name="syntax" column="syntax" jdbc-type="VARCHAR"/>
+        <field-descriptor name="year" column="year" jdbc-type="VARCHAR"/>
+        <field-descriptor name="counter" column="counter" jdbc-type="INTEGER"/>
+    </class-descriptor>
 
 </descriptor-repository>
 
