@@ -140,6 +140,7 @@ public class EditorForm extends UifFormBase {
     private boolean canDelete;
     private boolean canAdd;
     private boolean canDeleteEInstance;
+    private boolean canCopyBib;
     private String holdingItem = "item";
     private String itemStatusSelection = "false";
     private String serialReceivingDocId;
@@ -1277,6 +1278,14 @@ public class EditorForm extends UifFormBase {
 
     public void setSupressItemShelving(boolean supressItemShelving) {
         this.supressItemShelving = supressItemShelving;
+    }
+
+    public boolean isCanCopyBib() {
+        return canCopyBib;
+    }
+
+    public void setCanCopyBib(boolean canCopyBib) {
+        this.canCopyBib = canCopyBib;
     }
 
     public String getEnableAccessionNumberGeneration() {

@@ -7,12 +7,14 @@ import org.joda.time.Interval;
 import org.kuali.ole.OLEConstants;
 import org.kuali.ole.deliver.bo.OleCirculationDesk;
 import org.kuali.ole.deliver.calendar.bo.*;
+import org.kuali.ole.deliver.controller.checkout.CircUtilController;
 import org.kuali.ole.deliver.drools.FixedDateUtil;
 import org.kuali.ole.deliver.service.ParameterValueResolver;
 import org.kuali.rice.krad.service.BusinessObjectService;
 import org.kuali.rice.krad.service.KRADServiceLocator;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -24,6 +26,9 @@ public class LoanDateTimeUtil extends ExceptionDateLoanDateTimeUtil {
     private OleCalendar activeCalendar;
     private BusinessObjectService businessObjectService;
     private Boolean nonWorkingHoursCheck = false;
+    private String period;
+    private ParameterValueResolver parameterValueResolver;
+    private Date timeToCalculateFrom;
 
     public Date calculateDateTimeByPeriod(String loanPeriod, OleCirculationDesk oleCirculationDesk) {
         Date loanDueDate;
@@ -98,26 +103,62 @@ public class LoanDateTimeUtil extends ExceptionDateLoanDateTimeUtil {
     }
 
     private Date handleNonWorkingHoursWorkflow(Date loanDueDate, List<? extends OleBaseCalendarWeek> oleBaseCalendarWeekList) {
-        Map<String, Map<String, String>> openAndClosingTimeForTheGivenDayFromWeekList = getOpenAndClosingTimeForTheGivenDayFromWeekList(loanDueDate, oleBaseCalendarWeekList);
-        if (nonWorkingHoursCheck) {
-            loanDueDate = processDueDateAndGracePeriod(loanDueDate, openAndClosingTimeForTheGivenDayFromWeekList);
-        } else {
-            boolean loanDueTimeWithinWorkingHours = isLoanDueTimeWithinWorkingHours(loanDueDate, oleBaseCalendarWeekList);
-            if (!loanDueTimeWithinWorkingHours) {
-                if (includeNonWorkingHours()) {
+        if (StringUtils.isNotBlank(period) && (period.equalsIgnoreCase("h") || period.equalsIgnoreCase("m"))) {
+            Map<String, Map<String, String>> openAndClosingTimeForTheGivenDayFromWeekList = getOpenAndClosingTimeForTheGivenDayFromWeekList(loanDueDate, oleBaseCalendarWeekList);
+            if (nonWorkingHoursCheck) {
+                loanDueDate = processDueDateAndGracePeriod(loanDueDate, openAndClosingTimeForTheGivenDayFromWeekList);
+            } else {
+                boolean loanDueTimeWithinWorkingHours = isLoanDueTimeWithinWorkingHours(loanDueDate, oleBaseCalendarWeekList);
+                if (!loanDueTimeWithinWorkingHours) {
+                    if (includeNonWorkingHours()) {
                     Date followingDay =getFollowingDay(loanDueDate);
-                    nonWorkingHoursCheck = true;
-                    loanDueDate = calculateDueDate(followingDay);
-                } else {
-                    Map<String, String> closeTime = openAndClosingTimeForTheGivenDayFromWeekList.get("closeTime");
-                    Calendar calendar = resolveDateTime(closeTime, loanDueDate);
-                    loanDueDate = calendar.getTime();
-                }
+                        nonWorkingHoursCheck = true;
+                        loanDueDate = calculateDueDate(followingDay);
+                    } else {
+                        Map<String, String> closeTime = openAndClosingTimeForTheGivenDayFromWeekList.get("closeTime");
+                        Map<String, String> openTime = openAndClosingTimeForTheGivenDayFromWeekList.get("openTime");
+                        Calendar calendar;
+                        if (isOpenTimeGreaterThanCloseTime(openTime, closeTime)) {
+                            calendar = resolveDateTime(closeTime, DateUtils.addDays(loanDueDate, 1));
+                        } else {
+                            calendar = resolveDateTime(closeTime, loanDueDate);
+                        }
+                        loanDueDate = calendar.getTime();
+                    }
             } else if(inDueDateFallsBeforeOpeningTimeOfLibrary(openAndClosingTimeForTheGivenDayFromWeekList.get("openTime"), loanDueDate)) {
                 loanDueDate = processDueDateAndGracePeriod(loanDueDate,openAndClosingTimeForTheGivenDayFromWeekList);
+                }
             }
+        } else {
+            loanDueDate = processDueTimeForRegularLoan(loanDueDate);
         }
         return loanDueDate;
+    }
+
+    private Date processDueTimeForRegularLoan(Date loanDueDate) {
+        boolean validTime = false;
+        int hours = 23;
+        int minutes = 59;
+        int seconds = 59;
+        String defaultDueTime = getDefaultTimeForDueDate();
+        if (StringUtils.isNotBlank(defaultDueTime)) {
+            validTime = new CircUtilController().validateTime(defaultDueTime);
+        }
+        if (validTime) {
+            StringTokenizer timeTokenizer = new StringTokenizer(defaultDueTime, ":");
+            hours = timeTokenizer.hasMoreTokens() ? Integer.parseInt(timeTokenizer.nextToken()) : 0;
+            minutes = timeTokenizer.hasMoreTokens() ? Integer.parseInt(timeTokenizer.nextToken()) : 0;
+            seconds = timeTokenizer.hasMoreTokens() ? Integer.parseInt(timeTokenizer.nextToken()) : 0;
+        }
+        loanDueDate.setHours(hours);
+        loanDueDate.setMinutes(minutes);
+        loanDueDate.setSeconds(seconds);
+        return loanDueDate;
+    }
+
+    public String getDefaultTimeForDueDate() {
+        return getParameterValueResolver().getParameter(OLEConstants
+                .APPL_ID_OLE, OLEConstants.DLVR_NMSPC, OLEConstants.DLVR_CMPNT, OLEConstants.DEFAULT_TIME_FOR_DUE_DATE);
     }
 
     private Date processDueDateAndGracePeriod(Date loanDueDate, Map<String, Map<String, String>> openAndClosingTimeForTheGivenDayFromWeekList) {
@@ -144,16 +185,16 @@ public class LoanDateTimeUtil extends ExceptionDateLoanDateTimeUtil {
             } else {
                 StringTokenizer stringTokenizer = new StringTokenizer(loanPeriod, "-");
                 String amount = stringTokenizer.nextToken();
-                String period = stringTokenizer.nextToken();
+                period = stringTokenizer.nextToken();
 
                 if (period.equalsIgnoreCase("m")) {
-                    loanDueDate = DateUtils.addMinutes(new Date(), Integer.parseInt(amount));
+                    loanDueDate = DateUtils.addMinutes(getTimeToCalculateFrom(), Integer.parseInt(amount));
                 } else if (period.equalsIgnoreCase("h")) {
-                    loanDueDate = DateUtils.addHours(new Date(), Integer.parseInt(amount));
+                    loanDueDate = DateUtils.addHours(getTimeToCalculateFrom(), Integer.parseInt(amount));
                 } else if (period.equalsIgnoreCase("d")) {
-                    loanDueDate = DateUtils.addDays(new Date(), Integer.parseInt(amount));
+                    loanDueDate = DateUtils.addDays(getTimeToCalculateFrom(), Integer.parseInt(amount));
                 } else if (period.equalsIgnoreCase("w")) {
-                    loanDueDate = DateUtils.addWeeks(new Date(), Integer.parseInt(amount));
+                    loanDueDate = DateUtils.addWeeks(getTimeToCalculateFrom(), Integer.parseInt(amount));
                 }
             }
         }
@@ -179,21 +220,41 @@ public class LoanDateTimeUtil extends ExceptionDateLoanDateTimeUtil {
     }
 
     public Boolean includeNonWorkingHours() {
-        return ParameterValueResolver.getInstance().getParameterAsBoolean(OLEConstants
+        return getParameterValueResolver().getParameterAsBoolean(OLEConstants
                 .APPL_ID, OLEConstants.DLVR_NMSPC, OLEConstants.DLVR_CMPNT, OLEConstants.CALENDER_FLAG);
     }
 
 
     private boolean compareTimes(Map<String, String> openTimeForTheGivenDay, Map<String, String> closingTimeForTheGivenDay, Date loanDueDate) {
-        Calendar closeTimeCalendar = resolveDateTime(closingTimeForTheGivenDay, loanDueDate);
+        Calendar closeTimeCalendar;
+        if (isOpenTimeGreaterThanCloseTime(openTimeForTheGivenDay, closingTimeForTheGivenDay)) {
+            closeTimeCalendar = resolveDateTime(closingTimeForTheGivenDay, DateUtils.addDays(loanDueDate, 1));
+        }else {
+            closeTimeCalendar = resolveDateTime(closingTimeForTheGivenDay, loanDueDate);
+        }
         Calendar openTimeCalendar = resolveDateTime(openTimeForTheGivenDay, loanDueDate);
         //Compares for the givne day if the loan due time falls within the closing time
         return (openTimeCalendar.getTime().after(loanDueDate) || openTimeCalendar.getTime().compareTo(loanDueDate) <= 0 && closeTimeCalendar.getTime().compareTo(loanDueDate) >= 0);
     }
 
+    public boolean isOpenTimeGreaterThanCloseTime(Map<String, String> openTimeForTheGivenDay, Map<String, String> closingTimeForTheGivenDay) {
+        String openTime = openTimeForTheGivenDay.keySet().iterator().next();
+        String closeTime = closingTimeForTheGivenDay.keySet().iterator().next();
+        SimpleDateFormat parser = new SimpleDateFormat("HH:mm");
+        try {
+            Date openDateTime = parser.parse(openTime);
+            Date closeDateTime = parser.parse(closeTime);
+            if (openDateTime.after(closeDateTime)) {
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     private Calendar resolveDateTime(Map<String, String> closingTimeForTheGivenDay, Date loanDueDate) {
         String time = closingTimeForTheGivenDay.keySet().iterator().next();
-        String timeSession = closingTimeForTheGivenDay.get(time);
         StringTokenizer timeTokenizer = new StringTokenizer(time, ":");
         int hour = Integer.parseInt(timeTokenizer.nextToken());
 
@@ -262,7 +323,7 @@ public class LoanDateTimeUtil extends ExceptionDateLoanDateTimeUtil {
     }
 
     public String getGracePeriodForIncludingNonWorkingHours() {
-        return ParameterValueResolver.getInstance().getParameter(OLEConstants
+        return getParameterValueResolver().getParameter(OLEConstants
                 .APPL_ID_OLE, OLEConstants.DLVR_NMSPC, OLEConstants.DLVR_CMPNT, OLEConstants.GRACE_PERIOD_FOR_NON_WORKING_HOURS);
     }
 
@@ -310,7 +371,7 @@ public class LoanDateTimeUtil extends ExceptionDateLoanDateTimeUtil {
                     break;
                 }
             } else {
-                if (day < Integer.valueOf(startDay) && day >= Integer.valueOf(endDay)) {
+                if (day > Integer.valueOf(startDay) || day <= Integer.valueOf(endDay)) {
                     resolveOpenAndCloseTimesForCalendarWeek(closingTimeMap, openingTimeMap, OleBaseCalendarWeek);
                     break;
                 }
@@ -337,5 +398,27 @@ public class LoanDateTimeUtil extends ExceptionDateLoanDateTimeUtil {
 
     public void setActiveCalendar(OleCalendar activeCalendar) {
         this.activeCalendar = activeCalendar;
+    }
+
+    public ParameterValueResolver getParameterValueResolver() {
+        if (null == parameterValueResolver) {
+            parameterValueResolver = ParameterValueResolver.getInstance();
+        }
+        return parameterValueResolver;
+    }
+
+    public void setParameterValueResolver(ParameterValueResolver parameterValueResolver) {
+        this.parameterValueResolver = parameterValueResolver;
+    }
+
+    public Date getTimeToCalculateFrom() {
+        if (timeToCalculateFrom == null) {
+            timeToCalculateFrom = new Date();
+        }
+        return timeToCalculateFrom;
+    }
+
+    public void setTimeToCalculateFrom(Date timeToCalculateFrom) {
+        this.timeToCalculateFrom = timeToCalculateFrom;
     }
 }

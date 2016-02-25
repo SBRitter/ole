@@ -5,8 +5,7 @@ import org.apache.log4j.Logger;
 import org.kuali.ole.OLEConstants;
 import org.kuali.ole.deliver.processor.LoanProcessor;
 import org.kuali.ole.docstore.common.client.DocstoreClientLocator;
-import org.kuali.ole.docstore.common.document.content.instance.Item;
-import org.kuali.ole.docstore.common.document.content.instance.OleHoldings;
+import org.kuali.ole.docstore.common.document.content.instance.*;
 import org.kuali.ole.docstore.common.document.content.instance.xstream.HoldingOlemlRecordProcessor;
 import org.kuali.ole.docstore.common.document.content.instance.xstream.ItemOlemlRecordProcessor;
 
@@ -176,30 +175,6 @@ public class PatronBillHelperService {
                 feeTypes.addAll(feeTypeList);
             }
             for (FeeType feeType : feeTypes) {
-                if (feeType.getItemUuid() != null) {
-                    org.kuali.ole.docstore.common.document.Item item = getDocstoreClientLocator().getDocstoreClient().retrieveItem(feeType.getItemUuid());
-                    ItemOlemlRecordProcessor itemOlemlRecordProcessor = new ItemOlemlRecordProcessor();
-                    Item itemContent = itemOlemlRecordProcessor.fromXML(item.getContent());
-                    OleHoldings oleHoldings = new HoldingOlemlRecordProcessor().fromXML(item.getHolding().getContent());
-                    if (feeType.getItemUuid().equals(item.getId())) {
-                        feeType.setItemTitle(item.getHolding().getBib().getTitle());
-                        feeType.setItemAuthor(item.getHolding().getBib().getAuthor());
-                      /*  if(itemContent.getCallNumber()!=null && !StringUtils.isEmpty(itemContent.getCallNumber().getNumber())){
-                            feeType.setItemCallNumber(loanProcessor.getItemCallNumber(itemContent.getCallNumber()));
-                        }else {
-                            feeType.setItemCallNumber(loanProcessor.getItemCallNumber(oleHoldings.getCallNumber()));
-                        }*/
-                        feeType.setItemCallNumber(loanProcessor.getItemCallNumber(itemContent.getCallNumber(),oleHoldings.getCallNumber()));
-                        feeType.setItemCopyNumber(itemContent.getCopyNumber());
-                        feeType.setItemChronologyOwnLocation(itemContent.getChronology());
-                        feeType.setItemEnumeration(itemContent.getEnumeration());
-                        if(itemContent.getTemporaryItemType()!=null && itemContent.getTemporaryItemType().getCodeValue()!=null){
-                            feeType.setItemType(itemContent.getTemporaryItemType().getCodeValue());
-                        }else{
-                            feeType.setItemType(itemContent.getItemType().getCodeValue());
-                        }
-                    }
-                }
                 if (feeType.getFeeTypes() != null) {
                     feeType.getFeeTypes().add(feeType);
                 }
@@ -222,6 +197,68 @@ public class PatronBillHelperService {
         return feeTypes;
     }
 
+
+    public void setFeeTypeInfo(FeeType feeType, String itemUUID){
+        String location = null;
+        try {
+            org.kuali.ole.docstore.common.document.Item item = getDocstoreClientLocator().getDocstoreClient().retrieveItem(itemUUID);
+            ItemOlemlRecordProcessor itemOlemlRecordProcessor = new ItemOlemlRecordProcessor();
+            Item itemContent = itemOlemlRecordProcessor.fromXML(item.getContent());
+            OleHoldings oleHoldings = new HoldingOlemlRecordProcessor().fromXML(item.getHolding().getContent());
+            if(itemContent!=null && itemContent.getLocation()!=null && itemContent.getLocation().getLocationLevel()!=null) {
+                location = item.getLocationName();
+            }
+            if(location==null){
+                if(oleHoldings!=null && oleHoldings.getLocation()!=null && oleHoldings.getLocation().getLocationLevel()!=null) {
+                    location = item.getHolding().getLocationName();
+                }
+            }
+            feeType.setItemCallNumber(getItemCallNumber(itemContent.getCallNumber(),oleHoldings.getCallNumber()));
+            feeType.setItemTitle(item.getHolding().getBib().getTitle());
+            feeType.setItemAuthor(item.getHolding().getBib().getAuthor());
+            if(itemContent.getTemporaryItemType()!=null && itemContent.getTemporaryItemType().getCodeValue()!=null){
+                feeType.setItemType(itemContent.getTemporaryItemType().getCodeValue());
+            }else{
+                feeType.setItemType(itemContent.getItemType().getCodeValue());
+            }
+            feeType.setItemCopyNumber(itemContent.getCopyNumber());
+            feeType.setItemChronology(itemContent.getChronology());
+            feeType.setItemEnumeration(itemContent.getEnumeration());
+            feeType.setItemOwnLocation(location);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Retrieves Item call number.
+     *
+     * @param itemCallNumber,holdingCallNumber
+     * @return
+     * @throws Exception
+     */
+    public String getItemCallNumber(CallNumber itemCallNumber,CallNumber holdingCallNumber) throws Exception {
+        LOG.debug("Inside the getItemCallNumber method");
+        String callNumber = "";
+
+        if (itemCallNumber != null && StringUtils.isNotBlank(itemCallNumber.getType())) {
+            callNumber += itemCallNumber.getType() + OLEConstants.DELIMITER_DASH;
+        }else if(holdingCallNumber != null && StringUtils.isNotBlank(holdingCallNumber.getType())){
+            callNumber += holdingCallNumber.getType() + OLEConstants.DELIMITER_DASH;
+        }
+        if (itemCallNumber != null && StringUtils.isNotBlank(itemCallNumber.getPrefix())) {
+            callNumber += itemCallNumber.getPrefix() + OLEConstants.DELIMITER_DASH;
+        }else if(holdingCallNumber != null && StringUtils.isNotBlank(holdingCallNumber.getPrefix())){
+            callNumber += holdingCallNumber.getPrefix() + OLEConstants.DELIMITER_DASH;
+        }
+        if (itemCallNumber != null && StringUtils.isNotBlank(itemCallNumber.getNumber())) {
+            callNumber += itemCallNumber.getNumber();
+        }else if(holdingCallNumber != null && StringUtils.isNotBlank(holdingCallNumber.getNumber())){
+            callNumber += holdingCallNumber.getNumber();
+        }
+
+        return callNumber;
+    }
     /**
      * This method will retrieve paymentStatusName based on paymentStatusId
      *
@@ -618,40 +655,12 @@ public class PatronBillHelperService {
     }
 
     public List<FeeType> getUpdateItemDetailsToFeeTypeList(List<FeeType> feeTypes) {
-        LoanProcessor loanProcessor = new LoanProcessor();
         try {
-
             for (FeeType feeType : feeTypes) {
-                if (feeType.getItemUuid() != null) {
-                    org.kuali.ole.docstore.common.document.Item item = getDocstoreClientLocator().getDocstoreClient().retrieveItem(feeType.getItemUuid());
-                    ItemOlemlRecordProcessor itemOlemlRecordProcessor = new ItemOlemlRecordProcessor();
-                    Item itemContent = itemOlemlRecordProcessor.fromXML(item.getContent());
-                    OleHoldings oleHoldings = new HoldingOlemlRecordProcessor().fromXML(item.getHolding().getContent());
-                    if (feeType.getItemUuid().equals(item.getId())) {
-                        feeType.setItemTitle(item.getHolding().getBib().getTitle());
-                        feeType.setItemAuthor(item.getHolding().getBib().getAuthor());
-                        /*if(itemContent.getCallNumber()!=null && !StringUtils.isEmpty(itemContent.getCallNumber().getNumber())) {
-                            feeType.setItemCallNumber(loanProcessor.getItemCallNumber(itemContent.getCallNumber()));
-                        }else {
-                            feeType.setItemCallNumber(loanProcessor.getItemCallNumber(oleHoldings.getCallNumber()));
-                        }*/
-                        feeType.setItemCallNumber(loanProcessor.getItemCallNumber(itemContent.getCallNumber(),oleHoldings.getCallNumber()));
-                        feeType.setItemCopyNumber(itemContent.getCopyNumber());
-                        feeType.setItemChronologyOwnLocation(itemContent.getChronology());
-                        feeType.setItemEnumeration(itemContent.getEnumeration());
-                        if(itemContent.getTemporaryItemType()!=null && itemContent.getTemporaryItemType().getCodeValue()!=null){
-                            feeType.setItemType(itemContent.getTemporaryItemType().getCodeValue());
-                        }else{
-                            feeType.setItemType(itemContent.getItemType().getCodeValue());
-                        }
-                    }
-                }
                 if(feeType.getFeeTypes()!=null){
                     feeType.getFeeTypes().add(feeType);
                 }
             }
-
-
         } catch (Exception e) {
             LOG.error("Exception while updating item details to feeTypeList", e);
         }

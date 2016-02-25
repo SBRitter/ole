@@ -3,7 +3,6 @@ package org.kuali.ole.deliver.bo;
 import org.kuali.rice.core.api.util.type.KualiDecimal;
 import org.kuali.rice.krad.bo.PersistableBusinessObjectBase;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,7 +37,8 @@ public class FeeType extends PersistableBusinessObjectBase {
     private String itemAuthor;
     private String itemCallNumber;
     private String itemEnumeration;
-    private String itemChronologyOwnLocation;
+    private String itemChronology;
+    private String itemOwnLocation;
     private String itemCopyNumber;
     private Timestamp billDate = new Timestamp(new Date().getTime());
     private KualiDecimal balFeeAmount = new KualiDecimal(0);
@@ -54,6 +54,7 @@ public class FeeType extends PersistableBusinessObjectBase {
     private Date checkOutDate;
     private Timestamp checkInDate;
     private Timestamp lastTransactionDate;
+    private Timestamp overrideCheckInDate;
 
     public String getForgiveNote() {
         return forgiveNote;
@@ -152,12 +153,12 @@ public class FeeType extends PersistableBusinessObjectBase {
         this.itemEnumeration = itemEnumeration;
     }
 
-    public String getItemChronologyOwnLocation() {
-        return itemChronologyOwnLocation;
+    public String getItemChronology() {
+        return itemChronology;
     }
 
-    public void setItemChronologyOwnLocation(String itemChronologyOwnLocation) {
-        this.itemChronologyOwnLocation = itemChronologyOwnLocation;
+    public void setItemChronology(String itemChronology) {
+        this.itemChronology = itemChronology;
     }
 
     public String getItemCopyNumber() {
@@ -359,5 +360,21 @@ public class FeeType extends PersistableBusinessObjectBase {
 
     public void setViewBillNumber(Integer viewBillNumber) {
         this.viewBillNumber = viewBillNumber;
+    }
+
+    public String getItemOwnLocation() {
+        return itemOwnLocation;
+    }
+
+    public void setItemOwnLocation(String itemOwnLocation) {
+        this.itemOwnLocation = itemOwnLocation;
+    }
+
+    public Timestamp getOverrideCheckInDate() {
+        return overrideCheckInDate;
+    }
+
+    public void setOverrideCheckInDate(Timestamp overrideCheckInDate) {
+        this.overrideCheckInDate = overrideCheckInDate;
     }
 }

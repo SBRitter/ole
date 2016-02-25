@@ -1,6 +1,7 @@
 package org.kuali.ole.deliver.bo;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  * Created by chenchulakshmig on 1/20/15.
@@ -12,8 +13,9 @@ public class OLEDeliverRequestResultDisplayRow {
     private String requestTypeCode;
     private String borrowerFirstName;
     private String borrowerLastName;
+    private String itemUuid;
     private String borrowerBarcode;
-    private Date createDate;
+    private Timestamp createDate;
     private Date expiryDate;
     private Date onHoldExpirationDate;
     private String pickUpLocation;
@@ -62,15 +64,23 @@ public class OLEDeliverRequestResultDisplayRow {
         return borrowerBarcode;
     }
 
+    public String getItemUuid() {
+        return itemUuid;
+    }
+
+    public void setItemUuid(String itemUuid) {
+        this.itemUuid = itemUuid;
+    }
+
     public void setBorrowerBarcode(String borrowerBarcode) {
         this.borrowerBarcode = borrowerBarcode;
     }
 
-    public Date getCreateDate() {
+    public Timestamp getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(Timestamp createDate) {
         this.createDate = createDate;
     }
 

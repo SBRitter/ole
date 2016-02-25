@@ -186,7 +186,7 @@ public class RdbmsItemDocumentManager extends RdbmsHoldingsDocumentManager imple
             List<Audit> itemAuditedFields = OleAuditManager.getInstance().audit(ItemAudit.class, oldItemRecord, modifiedItemRecord, itemRecord.getItemId(), "ole");
             String oldBarcode = oldItemRecord.getBarCode();
             String newBarcode = itemRecord.getBarCode();
-            if(StringUtils.isNotBlank(oldBarcode) && (!oldBarcode.equals(newBarcode))){
+            if((oldBarcode!=null && (!oldBarcode.equals(newBarcode))) || (oldBarcode==null && newBarcode!=null)){
                 OleHttpRestClient oleHttpRestClient = new OleHttpRestClient();
                 String olefsUrl = ConfigContext.getCurrentContextConfig().getProperty("ole.fs.url.base");
                 String url = olefsUrl + "/rest/oledsdata/item/update/barcode";
@@ -1402,23 +1402,25 @@ public class RdbmsItemDocumentManager extends RdbmsHoldingsDocumentManager imple
         Map map = new HashMap();
         map.put("itemId", itemId);
         List<LocationsCheckinCountRecord> locationsCheckinCountRecordList = (List<LocationsCheckinCountRecord>) getBusinessObjectService().findMatching(LocationsCheckinCountRecord.class, map);
-        if (locationsCheckinCountRecordList != null && locationsCheckinCountRecordList.size() > 0) {
-            LocationsCheckinCountRecord locationsCheckinCountRecord = locationsCheckinCountRecordList.get(0);
-            CheckInLocation checkInLocation = checkInLocationList.get(0);
-            locationsCheckinCountRecord.setLocationCount(checkInLocation.getCount());
-            locationsCheckinCountRecord.setLocationName(checkInLocation.getName());
-            locationsCheckinCountRecord.setLocationInhouseCount(checkInLocation.getInHouseCount());
-            getBusinessObjectService().save(locationsCheckinCountRecord);
-        } else {
-
-            CheckInLocation checkInLocation = checkInLocationList.get(0);
+        CheckInLocation checkInLocation = checkInLocationList.get(0);
+        boolean isLocationPresent = false;
+        if(CollectionUtils.isNotEmpty(locationsCheckinCountRecordList)) {
+            for(LocationsCheckinCountRecord locationsCheckinCountRecord : locationsCheckinCountRecordList) {
+                if(locationsCheckinCountRecord.getLocationName().equals(checkInLocation.getName())) {
+                    isLocationPresent = true;
+                    locationsCheckinCountRecord.setLocationCount(checkInLocation.getCount());
+                    locationsCheckinCountRecord.setLocationInhouseCount(checkInLocation.getInHouseCount());
+                    getBusinessObjectService().save(locationsCheckinCountRecord);
+                }
+            }
+        }
+        if(!isLocationPresent) {
             LocationsCheckinCountRecord locationsCheckinCountRecord = new LocationsCheckinCountRecord();
             locationsCheckinCountRecord.setLocationCount(checkInLocation.getCount());
             locationsCheckinCountRecord.setLocationName(checkInLocation.getName());
             locationsCheckinCountRecord.setLocationInhouseCount(checkInLocation.getInHouseCount());
             locationsCheckinCountRecord.setItemId(itemId);
             getBusinessObjectService().save(locationsCheckinCountRecord);
-
         }
 
     }

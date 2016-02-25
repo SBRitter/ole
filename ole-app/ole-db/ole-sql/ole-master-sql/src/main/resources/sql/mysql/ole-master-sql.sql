@@ -1,4 +1,3 @@
-
 # -----------------------------------------------------------------------
 # AP_AUTO_APRV_EXCL_T
 # -----------------------------------------------------------------------
@@ -14990,7 +14989,7 @@ CREATE TABLE PUR_REQS_T
         , BILL_ST_CD VARCHAR(2) NOT NULL
         , BILL_PSTL_CD VARCHAR(20) NOT NULL
         , BILL_CNTRY_CD VARCHAR(2) NOT NULL
-        , BILL_PHN_NBR VARCHAR(20) NOT NULL
+        , BILL_PHN_NBR VARCHAR(20)
         , EXT_ORG_B2B_SUPP_ID VARCHAR(19)
         , ORG_AUTO_PO_LMT DECIMAL(19,2)
         , PO_AUTO_IND VARCHAR(1)
@@ -18090,7 +18089,7 @@ CREATE TABLE OLE_PUR_POBA_T
         , OBJ_ID VARCHAR(36) NOT NULL
         , VER_NBR DECIMAL(8) default 1 NOT NULL
         , OLE_POBA_ID DECIMAL(10)
-        , UPLD_FILE_NM VARCHAR(60)
+        , UPLD_FILE_NM VARCHAR(120)
         , UPLD_TYPE VARCHAR(40)
         , POBA_START_DT DATETIME
         , POBA_START_TM VARCHAR(40)

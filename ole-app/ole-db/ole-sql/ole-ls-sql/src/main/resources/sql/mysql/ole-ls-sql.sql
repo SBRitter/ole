@@ -1,4 +1,3 @@
-
 # -----------------------------------------------------------------------
 # OLE_ACC_LOC_T
 # -----------------------------------------------------------------------
@@ -1674,9 +1673,12 @@ CREATE TABLE OLE_DLVR_CIRC_RECORD
         , OVERDUE_NOTICE_DATE DATETIME
         , OLE_RQST_ID VARCHAR(40)
         , REPMNT_FEE_PTRN_BILL_ID VARCHAR(40)
-        , CHECK_IN_DT_TIME DATETIME NOT NULL
+        , CHECK_IN_DT_TIME DATETIME
+        , CHECK_IN_DT_TIME_OVR_RD DATETIME
         , CHECK_IN_OPTR_ID VARCHAR(40)
         , CHECK_IN_MACH_ID VARCHAR(100)
+        , ITEM_TYP_ID VARCHAR(100)
+        , TEMP_ITEM_TYP_ID VARCHAR(100)
         , ITEM_UUID VARCHAR(100) NOT NULL
     
     , CONSTRAINT OLE_DLVR_CIRC_RECORDP1 PRIMARY KEY(CIR_HIS_REC_ID)
@@ -1686,15 +1688,15 @@ CREATE TABLE OLE_DLVR_CIRC_RECORD
 
 
     
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
                                     
 , INDEX fk_OLE_DLVR_CIRC_RECORD_FK1 (OLE_PTRN_ID )
     
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
                                     
 , INDEX fk_OLE_DLVR_CIRC_RECORD_FK2 (PROXY_PTRN_ID )
     
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
                                     
 , INDEX OLE_DLVR_CIRC_RECORD_TI1 (LOAN_TRAN_ID )
 
@@ -1911,7 +1913,16 @@ CREATE TABLE OLE_DLVR_PTRN_BILL_FEE_TYP_T
         , DUE_DT_TIME DATETIME
         , CHECK_OUT_DT_TIME DATETIME
         , CHECK_IN_DT_TIME DATETIME
+        , CHECK_IN_DT_TIME_OVR_RD DATETIME
         , OPERATOR_ID VARCHAR(40)
+        , ITM_TITLE VARCHAR(600)
+        , ITM_AUTHOR VARCHAR(200)
+        , ITM_TYPE VARCHAR(100)
+        , ITM_CALL_NUM VARCHAR(100)
+        , ITM_COPY_NUM VARCHAR(20)
+        , ITM_ENUM VARCHAR(100)
+        , ITM_CHRON VARCHAR(100)
+        , ITM_LOC VARCHAR(600)
     
     , CONSTRAINT OLE_DLVR_PTRN_BILL_FEE_TYP_P1 PRIMARY KEY(ID)
 
@@ -1920,7 +1931,7 @@ CREATE TABLE OLE_DLVR_PTRN_BILL_FEE_TYP_T
 
 
     
-                                                                                                                                                                                                                                                                                                                                                                                                                                            
+
                                     
 , INDEX FEE_TYP_BILL_ID (PTRN_BILL_ID )
 
