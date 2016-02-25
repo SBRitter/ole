@@ -77,4 +77,41 @@
         <sql>ALTER TABLE OLE_PUR_POBA_T MODIFY UPLD_FILE_NM varchar2(120)</sql>
     </changeSet>
 
+    <changeSet context="bootstrap" author="ole" id="OLE_DS_ITEM_T_ADD_ACCNUMBER">
+        <addColumn catalogName="ole"
+                   schemaName="ole"
+                   tableName="OLE_DS_ITEM_T">
+            <column name="ACC_NUMBER" type="VARCHAR(40)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet context="bootstrap" author="ole" id="OLE_ACC_NUM_TYPE">
+        <createTable catalogName="ole" schemaName="ole"
+                     tableName="OLE_ACC_NUM">
+            <column name="code" type="VARCHAR(30)" />
+            <column name="name" type="VARCHAR(50)" />
+            <column name="counter" type="INT(15)" />
+            <column name="year" type="SMALLINT" />
+            <column name="syntax" type="VARCHAR(30)" />
+        </createTable>
+    </changeSet>
+
+    <changeSet context="bootstrap" author="ole" id="OLE_LOAD_KRCR_PARM_T_oracle" dbms="oracle">
+        <loadData tableName="KRCR_PARM_T" file="org/kuali/ole/3.0/data/krcr_parm_t.csv"/>
+        <rollback>
+            <delete tableName="KRCR_PARM_T">
+                <where>APPL_ID = 'OLE'</where>
+            </delete>
+        </rollback>
+    </changeSet>
+
+    <changeSet context="bootstrap" author="ole" id="OLE_KRIM_PERM_ATTR_DATA_T_oracle" dbms="oracle">
+        <loadData tableName="KRIM_PERM_ATTR_DATA_T" file="org/kuali/ole/3.0/data/ole_krim_perm_attr_data_t.csv"/>
+        <rollback>
+            <delete tableName="KRIM_PERM_ATTR_DATA_T">
+                <where>APPL_ID = 'OLE'</where>
+            </delete>
+        </rollback>
+    </changeSet>
+
 </databaseChangeLog>

@@ -1,2 +1,4 @@
 PERM_ID,OBJ_ID,VER_NBR,PERM_TMPL_ID,NMSPC_CD,NM,DESC_TXT,ACTV_IND
 OLE10502,OLE10502,1,1,OLE-CAT,MARC_EDITOR_COPY_BIB,user to Copy a bibliographic record will be created,Y
+OLE_ACCNUM,HBZ001,1,42,OLE-SELECT,Edit Accession Number Type Maintenance Document,Edit Accession Number Maintenance Document,Y
+OLE_ACCNUM2,HBZ002,1,10,OLE-CAT,Initiate Accession Number Type Document,Initiate Accession Number Type Document,Y
