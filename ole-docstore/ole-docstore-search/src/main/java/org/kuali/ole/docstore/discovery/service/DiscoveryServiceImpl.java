@@ -137,7 +137,7 @@ public class DiscoveryServiceImpl
             String holdingFields
                     = "LocalId_display,Uri_display,HoldingsNote_display,ReceiptStatus_display,CallNumber_display,CallNumberPrefix_display,CallNumberType_display,ClassificationPart_display,Location_display,ShelvingSchemeCode_display";
             String itemFields
-                    = "LocalId_display,ItemBarcode_display,ItemTypeFullValue_display,VendorLineItemIdentifier_display,ShelvingOrderValue_display,ShelvingSchemeValue_display,PurchaseOrderLineItemIdentifier_display,CopyNumber_display,Enumeration_display,Chronology_display,VolumeNumber_display,ItemStatus_display";
+                    = "LocalId_display,ItemBarcode_display,ItemTypeFullValue_display,VendorLineItemIdentifier_display,ShelvingOrderValue_display,ShelvingSchemeValue_display,PurchaseOrderLineItemIdentifier_display,CopyNumber_display,Enumeration_display,Chronology_display,VolumeNumber_display,ItemStatus_display,AccessionNumber_display";
             String instanceFields = "LocalId_display,Source_display";
             String patronFields
                     = "RecordNumber_display,BeginDate_display,Name_display,BorrowerType_display,BarCodeNumber_display,BarCodeStatus_display,";

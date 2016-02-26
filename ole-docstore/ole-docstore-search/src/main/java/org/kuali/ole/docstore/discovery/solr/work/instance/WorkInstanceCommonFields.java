@@ -91,6 +91,7 @@ public interface WorkInstanceCommonFields {
     public static final String VOLUME_NUMBER_LABEL_SEARCH = "VolumeNumberLabel_search";
     public static final String ENUMERATION_SEARCH = "Enumeration_search";
     public static final String CHRONOLOGY_SEARCH = "Chronology_search";
+    public static final String ACCESSION_NUMBER_SEARCH = "AccessionNumber_search";
 
     public static final String ITEM_IDENTIFIER_DISPLAY = "ItemIdentifier_display";
     public static final String ITEM_BARCODE_DISPLAY = "ItemBarcode_display";
@@ -113,5 +114,6 @@ public interface WorkInstanceCommonFields {
     public static final String ITEM_STATUS_SEARCH = "ItemStatus_search";
     public static final String ITEM_STATUS_SORT = "ItemStatus_sort";
     public static final String LOCATION_LEVEL_SORT = "Location_sort";
+    public static final String ACCESSION_NUMBER_DISPLAY = "AccessionNumber_display";
 
 }

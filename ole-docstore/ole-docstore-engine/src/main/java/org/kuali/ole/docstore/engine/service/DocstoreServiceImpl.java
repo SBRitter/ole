@@ -405,6 +405,8 @@ public class DocstoreServiceImpl implements DocstoreService {
                     itemDoc.setChronology(item.getChronology());
                 } else if (searchResultField.getFieldName().equalsIgnoreCase(itemDoc.ITEM_TYPE)) {
                     itemDoc.setItemType(item.getItemType().getCodeValue());
+                } else if (searchResultField.getFieldName().equalsIgnoreCase(Item.ACCESSION_NUMBER)) {
+                    itemDoc.setAccessionNumber(item.getAccessionNumber());
                 }
             }
         }

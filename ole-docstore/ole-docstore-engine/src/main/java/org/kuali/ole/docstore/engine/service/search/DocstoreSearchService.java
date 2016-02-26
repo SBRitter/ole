@@ -28,7 +28,7 @@ public interface DocstoreSearchService {
     public static final String BIB_FIELDS = "id,Author_display,Title_sort,Title_display,PublicationDate_display,Publisher_display,ISBN_display,ISSN_display,Edition_display,Description_display,Format_display,Language_display,DocFormat,LocalId_display,DocCategory,DocType," + BIB_LINK_FIELDS;
     public static final String HOLDINGS_FIELDS = "Location_display,Title_display,CallNumber_display,CallNumberPrefix_display,CallNumberType_display,CopyNumber_display,bibIdentifier,itemIdentifier,LocalId_display,Location_display,DocFormat," + HOLDINGS_LINK_FIELDS;
     public static final String EHOLDINGS_FIELDS = "LocalId_display,Location_display,Platform_display,ShelvingSchemeCode_display,Url_display,AccessStatus_display,DocFormat,StatisticalSearchingCodeValue_display," + EHOLDINGS_LINK_FIELDS;
-    public static final String ITEM_FIELDS = "ShelvingOrder_display,Title_display,ItemBarcode_display,Enumeration_display,Chronology_display,ItemType_display,VolumeNumber_display,ItemStatus_display," + ITEM_LINK_FIELDS;
+    public static final String ITEM_FIELDS = "ShelvingOrder_display,Title_display,ItemBarcode_display,Enumeration_display,Chronology_display,ItemType_display,VolumeNumber_display,ItemStatus_display,AccessionNumber_display," + ITEM_LINK_FIELDS;
 
     public SearchResponse search(SearchParams searchParams);
 

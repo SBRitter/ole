@@ -546,6 +546,10 @@ public class WorkInstanceOlemlDocBuilder extends DocBuilder implements WorkBibCo
                     solrDocForItem.addField(HOLDINGS_IDENTIFIER, oleInstance.getOleHoldings().getHoldingsIdentifier());
                 }
             }
+            if (item.getAccessionNumber() != null) {
+                solrDocForItem.addField(ACCESSION_NUMBER_SEARCH, item.getAccessionNumber());
+                solrDocForItem.addField(ACCESSION_NUMBER_DISPLAY, item.getAccessionNumber());
+            }
             solrInputDocuments.add(solrDocForItem);
         }
     }

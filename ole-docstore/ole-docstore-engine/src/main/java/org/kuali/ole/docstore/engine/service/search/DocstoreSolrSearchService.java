@@ -104,6 +104,7 @@ public class DocstoreSolrSearchService implements DocstoreSearchService, Docstor
         searchFieldsMap.put(EHoldings.COVERAGE_END_DATE, "CoverageDate_display");
         searchFieldsMap.put(EHoldings.STATISTICAL_CODE, "StatisticalSearchingCodeValue_display");
         searchFieldsMap.put(EHoldings.PLATFORM, "Platform_display");
+        searchFieldsMap.put(Item.ACCESSION_NUMBER, "AccessionNumber_search");
 
         searchResultFieldsMap.put(Bib.ID, "id");
         searchResultFieldsMap.put(Bib.AUTHOR, "Author_display");
@@ -162,6 +163,7 @@ public class DocstoreSolrSearchService implements DocstoreSearchService, Docstor
         searchResultFieldsMap.put(Holdings.HOLDINGSIDENTIFIER, "holdingsIdentifier");
         searchResultFieldsMap.put(Item.ITEMIDENTIFIER, "itemIdentifier");
         searchResultFieldsMap.put(Item.DUE_DATE_TIME, "dueDateTime");
+        searchResultFieldsMap.put(Item.ACCESSION_NUMBER, "AccessionNumber_display");
 
         joinQueryMap.put(BIB_HOLDINGS, "{!join from=id to=holdingsIdentifier}");
         joinQueryMap.put(HOLDINGS_BIB, "{!join from=id to=bibIdentifier}");

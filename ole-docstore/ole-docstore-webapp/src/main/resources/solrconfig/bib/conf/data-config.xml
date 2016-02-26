@@ -239,6 +239,8 @@
                 <field column="SHVLG_SCHM_NM" name="ShelvingSchemeValue_search"/>
             </entity>
 
+            <field column="ACC_NUMBER" name="AccessionNumber_display"/>
+            <field column="ACC_NUMBER" name="AccessionNumber_search"/>
         </entity>
 
     </document>

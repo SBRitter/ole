@@ -1553,6 +1553,18 @@
                         <exclude/>
                     </mapping>
                 </field>
+                <field id="AccessionNumber_search" name="Accession Number" type="text">
+                    <mapping type="xpath">
+                        <include>/accessionNumber</include>
+                        <exclude/>
+                    </mapping>
+                </field>
+                <field id="AccessionNumber_display" name="Accession Number" type="text">
+                    <mapping type="xpath">
+                        <include>/accessionNumber</include>
+                        <exclude/>
+                    </mapping>
+                </field>
             </documentFormat>
         </documentType>
         <documentType id="eInstance" name="EInstance">

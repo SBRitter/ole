@@ -33,7 +33,7 @@ public interface DiscoveryService {
     public static final String HOLDINGS_LINK_FIELDS = "bibIdentifier,instanceIdentifier,itemIdentifier";
     public static final String ITEM_LINK_FIELDS = "bibIdentifier,instanceIdentifier,holdingsIdentifier";
     public static final String HOLDINGS_FIELDS = "LocalId_display,Uri_display,HoldingsNote_display,ReceiptStatus_display,CallNumber_display,CallNumberPrefix_display,CallNumberType_display,ClassificationPart_display,DocType,DocFormat,id" + "," + HOLDINGS_LINK_FIELDS;
-    public static final String ITEM_FIELDS = "LocalId_display,ItemBarcode_display,ItemTypeFullValue_display,VendorLineItemIdentifier_display,ShelvingSchemeValue_display,ShelvingOrderValue_display,PurchaseOrderLineItemIdentifier_display,CopyNumber_display,VolumeNumber_display,DocType,DocFormat,id,Barcode_display" + "," + ITEM_LINK_FIELDS;
+    public static final String ITEM_FIELDS = "LocalId_display,ItemBarcode_display,ItemTypeFullValue_display,VendorLineItemIdentifier_display,ShelvingSchemeValue_display,ShelvingOrderValue_display,PurchaseOrderLineItemIdentifier_display,CopyNumber_display,VolumeNumber_display,DocType,DocFormat,id,Barcode_display,AccessionNumber_display" + "," + ITEM_LINK_FIELDS;
     public static final String INSTANCE_FIELDS = "LocalId_display,Source_display,DocType,DocFormat,id,Barcode_display" + "," + INSTANCE_LINK_FIELDS;
     public static final String BIB_FIELDS = "LocalId_display,Title_display,Author_display,Publisher_display,Description_display,Subject_display,Location_display,Format_display,DocType,DocFormat,id,Barcode_display" + "," + BIB_LINK_FIELDS;
     public static final String AUTHOR_FACET = "Author_facet";

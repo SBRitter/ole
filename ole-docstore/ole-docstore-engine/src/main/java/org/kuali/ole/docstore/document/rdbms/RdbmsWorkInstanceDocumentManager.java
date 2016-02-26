@@ -1686,6 +1686,7 @@ public class RdbmsWorkInstanceDocumentManager extends RdbmsAbstarctDocumentManag
                 item.setFormerIdentifier(formerIdList);
             }
         }
+        item.setAccessionNumber(itemRecord.getAccessionNumber());
 
         AccessInformation accessInformation = new AccessInformation();
         accessInformation.setBarcode(itemRecord.getBarCode());

@@ -742,6 +742,7 @@ public class BatchBibTreeDBUtil {
                 item.setContentObject(itemObj);
                 Location location = getLocationDetails(resultSet.getString("LOCATION"), resultSet.getString("LOCATION_LEVEL"));
                 itemObj.setLocation(location);
+                item.setAccessionNumber(resultSet.getString("ACC_NUMBER"));
                 CallNumber callNumber = new CallNumber();
                 callNumber.setNumber(resultSet.getString("CALL_NUMBER"));
                 callNumber.setPrefix(resultSet.getString("CALL_NUMBER_PREFIX"));

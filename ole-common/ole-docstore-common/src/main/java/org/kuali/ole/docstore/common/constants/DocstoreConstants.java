@@ -351,8 +351,8 @@ public interface DocstoreConstants {
     public static final String ACCESS_PASSWORD_SEARCH = "Access_Password_search";
     public static final String PERSIST_LINK_DISPLAY = "Persist_Link_display";
     public static final String PERSIST_LINK_SEARCH = "Persist_Link_search";
-    public static final String ILL_DISPLAY = "ILL_display";
-    public static final String ILL_SEARCH = "ILL_search";
+
+    public static final String ILL_SEARCH = "ILL_search";public static final String ILL_DISPLAY = "ILL_display";
     public static final String IS_BOUND_WITH = "isBoundwith";
 
     public static final String APPL_ID_OLE = "OLE";
@@ -369,5 +369,8 @@ public interface DocstoreConstants {
     public static final String TRANSFER_HOLDINGS_ANALYTIC_ERROR_MESSAGE = "Holdings can not be transfered. Holdings is in analytic relation.";
     public static final String TRANSFER_HOLDINGS_ITEM_ANALYTIC_ERROR_MESSAGE = "Holdings can not be transfered. Item attached with Holdings is in analytic relation.";
     public static final String TRANSFER_ITEM_ANALYTIC_ERROR_MESSAGE = "Item can not be transfered. Item is in analytic relation.";
+
+    public static final String ACCESSION_NUMBER_SEARCH = "AccessionNumber_search";
+    public static final String ACCESSION_NUMBER_DISPLAY = "AccessionNumber_display";
 
 }

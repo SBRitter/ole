@@ -134,7 +134,8 @@ import java.util.List;
     "missingPieceFlagNote",
     "missingPieceFlag",
     "missingPiecesCount",
-    "missingPieceEffectiveDate"
+    "missingPieceEffectiveDate",
+    "accessionNumber"
 })
 @XStreamAlias("item")
 @XmlRootElement(name = "item", namespace = "http://ole.kuali.org/standards/ole-instance")
@@ -241,6 +242,8 @@ public class Item {
     protected String resourceIdentifier;
     @XmlElement(namespace = "http://ole.kuali.org/standards/ole-instance")
     protected NumberOfCirculations numberOfCirculations;
+    @XmlElement
+    protected String accessionNumber;
 
     /**
      * Gets the value of the itemIdentifier property.
@@ -1261,4 +1264,11 @@ public class Item {
         this.missingPieceFlagNote = value;
     }
 
+    public String getAccessionNumber() {
+        return accessionNumber;
+    }
+
+    public void setAccessionNumber(String accessionNumber) {
+        this.accessionNumber = accessionNumber;
+    }
 }

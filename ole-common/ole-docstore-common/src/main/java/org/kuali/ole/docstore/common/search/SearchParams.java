@@ -457,6 +457,7 @@ public class SearchParams {
             searchParams.getSearchResultFields().add(searchParams.buildSearchResultField(docType, "ItemType_display"));
             searchParams.getSearchResultFields().add(searchParams.buildSearchResultField(docType, "dueDateTime"));
             searchParams.getSearchResultFields().add(searchParams.buildSearchResultField(docType, "DonorCode_display"));
+            searchParams.getSearchResultFields().add(searchParams.buildSearchResultField(docType, "AccessionNumber_display"));
         }
     }
 

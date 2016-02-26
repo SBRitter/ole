@@ -230,6 +230,8 @@ public class ItemOlemlIndexer extends DocstoreSolrIndexService implements Docsto
         solrInputDocument.addField(ITEM_DAMAGED_FLAG_SEARCH, item.isItemDamagedStatus());
         solrInputDocument.addField(MISSING_PIECE_COUNT_SEARCH,item.getMissingPiecesCount());
         solrInputDocument.addField(NUMBER_OF_PIECES_SEARCH,item.getNumberOfPieces());
+        solrInputDocument.addField(ACCESSION_NUMBER_SEARCH, itemDocument.getAccessionNumber());
+        solrInputDocument.addField(ACCESSION_NUMBER_DISPLAY, itemDocument.getAccessionNumber());
         Date date = new Date();
         // Item call number should be indexed if it is available at item level or holdings level.
         String itemCallNumber = null;

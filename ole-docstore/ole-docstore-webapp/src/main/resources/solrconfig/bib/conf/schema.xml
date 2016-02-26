@@ -564,6 +564,7 @@ but may be good for SKUs.  Can insert dashes in the wrong place and still match.
         <field name="HoldingsCopyNumber_search" type="text" indexed="true" stored="true" multiValued="true" sortMissingLast="true"/>
         <field name="MissingPieceCount_search" type="text" indexed="true" stored="true" multiValued="true" sortMissingLast="true"/>
         <field name="NumberOfPieces_search" type="text" indexed="true" stored="true" multiValued="true" sortMissingLast="true"/>
+        <field name="AccessionNumber_search" type="text" indexed="true" stored="true" multiValued="true" sortMissingLast="true"/>
         <!-- ends here..-->
 
 
@@ -613,6 +614,8 @@ but may be good for SKUs.  Can insert dashes in the wrong place and still match.
         <field name="MissingPieceCount_display" type="text" indexed="true" stored="true" multiValued="true" sortMissingLast="true"/>
         <field name="NumberOfPieces_display" type="text" indexed="true" stored="true" multiValued="true" sortMissingLast="true"/>
         <field name="originalDueDate" type="string" indexed="true" stored="true" multiValued="false"  sortMissingLast="true" />
+        <field name="AccessionNumber_display" type="text" indexed="true" stored="true" multiValued="true" sortMissingLast="true"/>
+
         <!-- ends here..-->
 
         <!--License fields starts here.. -->
