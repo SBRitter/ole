@@ -479,6 +479,14 @@
                         src="${ConfigProperties.externalizable.images.url}receive.gif"
                         alt="Receive" title="Receive"
                         styleClass="tinybutton"  />
+                <!-- button to link to the item editor directly -->
+                <c:set var="bibeditorEditURL" value="${KualiForm.document.bibeditorEditURL}" />
+                <c:set var="itemUUID" value="${itemCopies.itemUUID}"/>
+                <c:set var="bibId" value="${itemCopies.bibId}"/>
+                <c:set var="holdingsId" value="${itemCopies.instanceId}"/>
+                <input type="image" id="itemEditAddedItemButton_${ctr}"
+                       src="${ConfigProperties.kr.externalizable.images.url}tinybutton-edit1.gif"
+                       onclick="javascript:editItem('${itemUUID}', '${bibId}', '${holdingsId}', '${bibeditorEditURL}')"/>
             </div>
         </td>
     </c:if>
@@ -798,5 +806,17 @@
 </table>
 </td>
 </tr>
+
+<script>
+    function editItem(itemId, bibId, holdingsId, bibUrl) {
+        var url = bibUrl.replace("docType=bibliographic", "docType=item");
+        url = url.replace("docFormat=marc", "docFormat=oleml");
+        url = url + "&docId=" + itemId + "&bibId=" + bibId + "&instanceId=" + holdingsId + "&editable=true";
+        window.open(url);
+    }
+</script>
+
+
+
 
 

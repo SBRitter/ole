@@ -510,7 +510,7 @@
 <select:oleReceivingLineItemExceptionNotes itemAttributes="${itemAttributes}" accountPrefix="document.item[${ctr}]." itemColSpan="${colCount}" count="${ctr}"/>
 <select:oleReceivingLineItemReceiptNotes itemAttributes="${itemAttributes}" accountPrefix="document.item[${ctr}]." itemColSpan="${colCount}" count="${ctr}"/>
 <select:oleReceivingLineItemSpecialHandlingNotes itemAttributes="${itemAttributes}" accountPrefix="document.item[${ctr}]." itemColSpan="${colCount}" count="${ctr}"/>
-<c:if test="${fn:length(KualiForm.document.items[ctr].copyList) > 1 }">
+<c:if test="${fn:length(KualiForm.document.items[ctr].copyList) > 0 }">
     <select:oleCopies itemAttributes="${itemAttributes}" accountPrefix="document.item[${ctr}]." isATypeOfRCVGDoc="${isATypeOfRCVGDoc}"  isATypeOfCORRDoc="${isATypeOfCORRDoc}" itemColSpan="${colCount}" count="${ctr}" isFinal="${isFinal}"/>
 </c:if>
 <select:oleDonor itemAttributes="${itemAttributes}" accountPrefix="document.item[${ctr}]." itemColSpan="${colCount}" count="${ctr}" isFinal="${isFinal}"/>
