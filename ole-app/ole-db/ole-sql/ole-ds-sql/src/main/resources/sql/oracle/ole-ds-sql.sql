@@ -1,3 +1,4 @@
+
 -----------------------------------------------------------------------------
 -- OLE_DS_ACCESS_LOCATION_CODE_T
 -----------------------------------------------------------------------------
@@ -777,6 +778,7 @@ CREATE TABLE OLE_DS_ITEM_T
         , UNIQUE_ID_PREFIX VARCHAR2(10)
         , ORG_DUE_DATE_TIME TIMESTAMP
         , DESC_OF_PIECES VARCHAR2(400)
+        , ACC_NUMBER VARCHAR2(40)
     
 
 )
@@ -1024,6 +1026,39 @@ CREATE INDEX OLE_MISS_PCE_ITM_HSTRY_I
   ON OLE_MISS_PCE_ITM_HSTRY_T 
   (OPERATOR_ID, PATRON_BARCODE, PATRON_ID)
 /
+
+
+
+
+
+-----------------------------------------------------------------------------
+-- OLE_ACC_NUM
+-----------------------------------------------------------------------------
+DECLARE temp NUMBER;
+BEGIN
+	SELECT COUNT(*) INTO temp FROM user_tables WHERE table_name = 'OLE_ACC_NUM';
+	IF temp > 0 THEN EXECUTE IMMEDIATE 'DROP TABLE OLE_ACC_NUM CASCADE CONSTRAINTS PURGE'; END IF;
+END;
+/
+
+CREATE TABLE OLE_ACC_NUM
+(
+      code VARCHAR2(30)
+        , name VARCHAR2(50)
+        , counter NUMBER(10,0)
+        , year NUMBER(5,0)
+        , syntax VARCHAR2(30)
+    
+
+)
+/
+
+ALTER TABLE OLE_ACC_NUM
+    ADD CONSTRAINT OLE_ACC_NUMP1
+PRIMARY KEY (code)
+/
+
+
 
 
 

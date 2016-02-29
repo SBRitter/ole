@@ -1,3 +1,4 @@
+
 # -----------------------------------------------------------------------
 # OLE_DS_ACCESS_LOCATION_CODE_T
 # -----------------------------------------------------------------------
@@ -613,6 +614,7 @@ CREATE TABLE OLE_DS_ITEM_T
         , UNIQUE_ID_PREFIX VARCHAR(10)
         , ORG_DUE_DATE_TIME DATETIME
         , DESC_OF_PIECES VARCHAR(400)
+        , ACC_NUMBER VARCHAR(40)
     
     , CONSTRAINT OLE_DS_ITEM_TP1 PRIMARY KEY(ITEM_ID)
 
@@ -621,11 +623,11 @@ CREATE TABLE OLE_DS_ITEM_T
 
 
     
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
                                     
 , INDEX OLE_DS_ITEM_TI1 (BARCODE )
     
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
                                     
 , INDEX OLE_DS_ITEM_TI2 (HOLDINGS_ID )
 
@@ -820,6 +822,31 @@ CREATE TABLE OLE_MISS_PCE_ITM_HSTRY_T
                                                                                                                                                                                                                                                         
                                     
 , INDEX OLE_MISS_PCE_ITM_HSTRY_I (OPERATOR_ID , PATRON_BARCODE , PATRON_ID )
+
+) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin
+/
+
+
+# -----------------------------------------------------------------------
+# OLE_ACC_NUM
+# -----------------------------------------------------------------------
+drop table if exists OLE_ACC_NUM
+/
+
+CREATE TABLE OLE_ACC_NUM
+(
+      code VARCHAR(30)
+        , name VARCHAR(50)
+        , counter INTEGER
+        , year SMALLINT
+        , syntax VARCHAR(30)
+    
+    , CONSTRAINT OLE_ACC_NUMP1 PRIMARY KEY(code)
+
+
+
+
+
 
 ) ENGINE InnoDB CHARACTER SET utf8 COLLATE utf8_bin
 /
