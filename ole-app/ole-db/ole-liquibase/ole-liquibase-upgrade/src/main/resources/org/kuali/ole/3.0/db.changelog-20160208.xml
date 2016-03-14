@@ -105,11 +105,77 @@
         </rollback>
     </changeSet>
 
+    <changeSet context="bootstrap" author="ole" id="OLE_LOAD_KRCR_PARM_T_mysql" dbms="mysql">
+        <sql>
+            SET sql_mode='NO_BACKSLASH_ESCAPES'
+        </sql>
+        <loadData tableName="KRCR_PARM_T" file="org/kuali/ole/3.0/data/krcr_parm_t.csv"/>
+        <rollback>
+            <delete tableName="KRCR_PARM_T">
+                <where>APPL_NMSPC_CD = 'OLE'</where>
+            </delete>
+        </rollback>
+    </changeSet>
+
+    <changeSet context="bootstrap" author="ole" id="OLE_KRIM_PERM_T_oracle" dbms="oracle">
+        <loadData tableName="KRIM_PERM_T" file="org/kuali/ole/3.0/data/ole_krim_perm_t.csv"/>
+        <rollback>
+            <delete tableName="KRIM_PERM_T">
+                <where>APPL_ID = 'OLE'</where>
+            </delete>
+        </rollback>
+    </changeSet>
+
+    <changeSet context="bootstrap" author="ole" id="OLE_KRIM_PERM_T_mysql" dbms="mysql">
+        <sql>
+            SET sql_mode='NO_BACKSLASH_ESCAPES'
+        </sql>
+        <loadData tableName="KRIM_PERM_T" file="org/kuali/ole/3.0/data/ole_krim_perm_t.csv"/>
+        <rollback>
+            <delete tableName="KRIM_PERM_T">
+                <where>APPL_NMSPC_CD = 'OLE'</where>
+            </delete>
+        </rollback>
+    </changeSet>
+
     <changeSet context="bootstrap" author="ole" id="OLE_KRIM_PERM_ATTR_DATA_T_oracle" dbms="oracle">
         <loadData tableName="KRIM_PERM_ATTR_DATA_T" file="org/kuali/ole/3.0/data/ole_krim_perm_attr_data_t.csv"/>
         <rollback>
             <delete tableName="KRIM_PERM_ATTR_DATA_T">
                 <where>APPL_ID = 'OLE'</where>
+            </delete>
+        </rollback>
+    </changeSet>
+
+    <changeSet context="bootstrap" author="ole" id="OLE_KRIM_PERM_ATTR_DATA_T_mysql" dbms="mysql">
+        <sql>
+            SET sql_mode='NO_BACKSLASH_ESCAPES'
+        </sql>
+        <loadData tableName="KRIM_PERM_ATTR_DATA_T" file="org/kuali/ole/3.0/data/ole_krim_perm_attr_data_t.csv"/>
+        <rollback>
+            <delete tableName="KRIM_PERM_ATTR_DATA_T">
+                <where>APPL_NMSPC_CD = 'OLE'</where>
+            </delete>
+        </rollback>
+    </changeSet>
+
+    <changeSet context="bootstrap" author="ole" id="OLE_KRIM_ROLE_PERM_T_oracle" dbms="oracle">
+        <loadData tableName="KRIM_ROLE_PERM_T" file="org/kuali/ole/2.0/data/ole_krim_role_perm_t.csv"/>
+        <rollback>
+            <delete tableName="KRIM_ROLE_PERM_T">
+                <where>APPL_ID = 'OLE'</where>
+            </delete>
+        </rollback>
+    </changeSet>
+
+    <changeSet context="bootstrap" author="ole" id="OLE_KRIM_ROLE_PERM_T_mysql" dbms="mysql">
+        <sql>
+            SET sql_mode='NO_BACKSLASH_ESCAPES'
+        </sql>
+        <loadData tableName="KRIM_ROLE_PERM_T" file="org/kuali/ole/2.0/data/ole_krim_role_perm_t.csv"/>
+        <rollback>
+            <delete tableName="KRIM_ROLE_PERM_T">
+                <where>APPL_NMSPC_CD = 'OLE'</where>
             </delete>
         </rollback>
     </changeSet>
