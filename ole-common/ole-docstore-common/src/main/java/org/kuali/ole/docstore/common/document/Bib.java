@@ -37,6 +37,7 @@ import java.io.StringWriter;
  *         &lt;element name="publisher" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="author" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="title" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="formerId" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/extension>
  *   &lt;/complexContent>
@@ -52,7 +53,8 @@ import java.io.StringWriter;
         "publicationDate",
         "publisher",
         "author",
-        "title"
+        "title",
+        "formerId"
 })
 @XmlRootElement(name = "bibDoc")
 public class Bib
@@ -80,6 +82,7 @@ public class Bib
     protected String publisher;
     protected String author;
     protected String title;
+    protected String formerId;
 
     public Bib() {
         category = DocCategory.WORK.getCode();
@@ -245,6 +248,14 @@ public class Bib
      */
     public void setTitle(String value) {
         this.title = value;
+    }
+    
+    public String getFormerId() {
+    	return formerId;
+    }
+    
+    public void setFormerId(String formerId) {
+    	this.formerId = formerId;
     }
 
     @Override

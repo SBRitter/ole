@@ -65,6 +65,7 @@ public class RdbmsBibDocumentManager extends RdbmsAbstarctDocumentManager {
         if(StringUtils.isNotEmpty(bib.getId())){
             bibRecord.setBibId(bib.getId());
         }
+        bibRecord.setFormerId(bib.getFormerId());
         getBusinessObjectService().save(bibRecord);
         bib.setId(DocumentUniqueIDPrefix.getPrefixedId(bibRecord.getUniqueIdPrefix(), bibRecord.getBibId()));
         bib.setContent(bibRecord.getContent());
