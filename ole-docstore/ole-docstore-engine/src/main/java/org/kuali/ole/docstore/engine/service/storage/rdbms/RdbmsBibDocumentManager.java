@@ -481,4 +481,32 @@ public class RdbmsBibDocumentManager extends RdbmsAbstarctDocumentManager {
         }
         checkUuidsToDelete(uuids, uuidCount);
     }
+    
+    public Object retrieveByFormerId(String id) {
+        Bib bibMarc = retrieveBibByFormerId(id);
+        return bibMarc;
+    }
+
+    public List<Object> retrieveByFormerId(List<String> ids) {
+        List<Object> bibs = new ArrayList<>();
+        for (String id : ids) {
+            bibs.add(retrieveByFormerId(id));
+        }
+        return bibs;
+    }
+    
+    protected Bib retrieveBibByFormerId(String id) {
+    	HashMap<String, String> formerIdMap = new HashMap<String, String>();
+        formerIdMap.put("formerId", id);
+        Collection<BibRecord> bibRecords = getBusinessObjectService().findMatching(BibRecord.class, formerIdMap);
+        if (bibRecords == null) {
+            DocstoreException docstoreException = new DocstoreValidationException(DocstoreResources.RECORD_NOT_FOUND,
+                    DocstoreResources.RECORD_NOT_FOUND);
+            docstoreException.addErrorParams("bibId", id);
+            throw docstoreException;
+        }
+        Bib bib = buildBibDocFromBibRecord(bibRecords.iterator().next());
+        return bib;        
+    }
+
 }

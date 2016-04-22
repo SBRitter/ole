@@ -13,6 +13,7 @@ import org.kuali.ole.docstore.common.document.ids.HoldingsId;
 import org.kuali.ole.docstore.common.exception.*;
 import org.kuali.ole.docstore.common.find.FindParams;
 import org.kuali.ole.docstore.common.service.DocstoreService;
+import org.kuali.ole.docstore.engine.service.DocstoreServiceImpl;
 import org.kuali.ole.docstore.service.BeanLocator;
 import org.kuali.ole.utility.OleStopWatch;
 import org.slf4j.Logger;
@@ -56,7 +57,12 @@ public class BibRestServlet extends HttpServlet {
                 } else if (req.getPathInfo().startsWith("/doc/tree")) {
                     result = retrieveBibTree(req);
                 } else {
-                    result = retrieveBib(req);
+                	if (req.getParameter("bibId") != null) {
+                		result = retrieveBib(req);
+                	} else if (req.getParameter("formerId") != null) {
+                		result = retrieveBibByFormerId(req);
+                	}
+                    
                 }
             } else {
                 result = retrieveBibContent(req);
@@ -356,6 +362,27 @@ public class BibRestServlet extends HttpServlet {
             bibIdList.add(bibId);
         }
         return BibTrees.serialize(ds.retrieveBibTrees(bibIdList));
+    }
+    
+    private String retrieveBibByFormerId(HttpServletRequest req) {
+        DocstoreService ds = BeanLocator.getDocstoreService();
+        Map params = req.getParameterMap();
+        String[] formerIds = (String[]) params.get("formerId");
+        List<String> formerIdList = new ArrayList<String>();
+        for (String formerId : formerIds) {
+            if (!formerId.equals("null")) {
+                formerIdList.add(formerId);
+            }
+        }
+        List<Bib> bibs = null;
+        bibs = ((DocstoreServiceImpl) ds).retrieveBibsByFormerId(formerIdList);
+        if (bibs.size() == 1) {
+            Bib bib = bibs.get(0);
+            return bib.serialize(bib);
+        }
+        Bibs bibsObj = new Bibs();
+        bibsObj.getBibs().addAll(bibs);
+        return Bibs.serialize(bibsObj);
     }
 
 }

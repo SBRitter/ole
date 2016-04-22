@@ -626,6 +626,20 @@ public class DocstoreRDBMSStorageService implements DocstoreStorageService {
         RdbmsHoldingsDocumentManager rdbmsHoldingsDocumentManager = RdbmsHoldingsDocumentManager.getInstance();
         rdbmsHoldingsDocumentManager.unbindWithAllBibs(holdingsIds, bibId);
     }
+    
+    public List<Bib> retrieveBibsByFormerId(List<String> formerIds) {
+        DocumentManager documentManager = null;
+        List<Bib> bibs = new ArrayList<>();
+        if(formerIds != null && formerIds.size() > 0) {
+            documentManager = RdbmsBibDocumentManager.getInstance();
+            List<Object> objs = ((RdbmsBibDocumentManager) documentManager).retrieveByFormerId(formerIds);
+            for (Object obj : objs) {
+                bibs.add((Bib) obj);
+            }
+        }
+        return bibs;
+    }
+
 
 }
 

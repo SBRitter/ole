@@ -1424,5 +1424,10 @@ public class DocstoreServiceImpl implements DocstoreService {
         }
         return bibTrees;
     }
+    
+    public List<Bib> retrieveBibsByFormerId(List<String> formerIds) {
+        List<Bib> bibs = ((DocstoreRDBMSStorageService) getDocstoreStorageService()).retrieveBibsByFormerId(formerIds);
+        return bibs;
+    }
 
 }
