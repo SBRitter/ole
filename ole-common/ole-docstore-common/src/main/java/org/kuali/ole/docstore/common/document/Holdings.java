@@ -39,6 +39,7 @@ import java.util.Map;
  *         &lt;element name="callNumber" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="holdingsType" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="bib" type="{}bib" minOccurs="0"/>
+ *         &lt;element name="formerHoldingsId" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/extension>
  *   &lt;/complexContent>
@@ -57,7 +58,8 @@ import java.util.Map;
         "bib",
         "isBoundWithBib",
         "bibs",
-        "isSeries"
+        "isSeries",
+        "formerHoldingsId"
 })
 @XmlRootElement
 
@@ -121,7 +123,8 @@ public class Holdings
     @XmlElement(name = "bibDocs")
     protected Bibs bibs;
     protected boolean isSeries = false;
-
+    protected String formerHoldingsId;
+    
     @XmlTransient
     protected boolean dataMappingFlag;
 
@@ -414,6 +417,14 @@ public class Holdings
 
     public void setSeries(boolean series) {
         isSeries = series;
+    }
+    
+    public String getFormerHoldingsId() {
+    	return formerHoldingsId;
+    }
+    
+    public void setFormerHoldingsId(String formerHoldingsId) {
+    	this.formerHoldingsId = formerHoldingsId;
     }
 
     @Override

@@ -86,7 +86,8 @@ public class RdbmsHoldingsDocumentManager extends RdbmsAbstarctDocumentManager {
 
         holdingsRecord.setHoldingsType(holdings.getHoldingsType());
         setHoldingsCommonInformation(oleHoldings, holdingsRecord);
-
+        holdingsRecord.setFormerHoldingsId(holdings.getFormerHoldingsId());
+        
         if (holdings instanceof PHoldings || PHoldings.PRINT.equalsIgnoreCase(holdings.getHoldingsType())) {
             setPHoldingsInformation(holdingsRecord, oleHoldings);
         } else {
