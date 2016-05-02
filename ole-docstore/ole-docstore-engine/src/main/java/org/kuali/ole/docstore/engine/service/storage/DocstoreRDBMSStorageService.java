@@ -639,7 +639,12 @@ public class DocstoreRDBMSStorageService implements DocstoreStorageService {
         }
         return bibs;
     }
-
+    
+    public Holdings retrieveHoldingsByFormerHoldingsId(String formerHoldingsId) {
+        RdbmsHoldingsDocumentManager rdbmsHoldingsDocumentManager = RdbmsHoldingsDocumentManager.getInstance();
+        Holdings holdings = (Holdings) rdbmsHoldingsDocumentManager.retrieveByFormerHoldingsId(formerHoldingsId);
+        return holdings;
+    }
 
 }
 

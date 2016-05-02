@@ -1429,5 +1429,13 @@ public class DocstoreServiceImpl implements DocstoreService {
         List<Bib> bibs = ((DocstoreRDBMSStorageService) getDocstoreStorageService()).retrieveBibsByFormerId(formerIds);
         return bibs;
     }
-
+    
+    public Holdings retrieveHoldingsByFormerHoldingsId(String formerHoldingsId) {
+        Holdings holdings = ((DocstoreRDBMSStorageService)getDocstoreStorageService())
+        		.retrieveHoldingsByFormerHoldingsId(formerHoldingsId);
+        holdings.setCategory(DocCategory.WORK.getCode());
+        holdings.setType(DocType.HOLDINGS.getCode());
+    	holdings.setFormat(DocFormat.OLEML.getCode());
+    	return holdings;
+    }
 }

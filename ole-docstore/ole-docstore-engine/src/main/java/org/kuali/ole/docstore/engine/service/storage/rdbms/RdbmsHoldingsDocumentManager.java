@@ -1790,4 +1790,38 @@ public class RdbmsHoldingsDocumentManager extends RdbmsAbstarctDocumentManager {
         }
 
     }
+    
+    public Object retrieveByFormerHoldingsId(String formerHoldingsId) {
+        Holdings holdings = retrieveHoldingsByFormerHoldingsId(formerHoldingsId, null, null);
+        return holdings;
+    }
+ 
+    protected Holdings retrieveHoldingsByFormerHoldingsId(String formerHoldingsId, Bib bib, HoldingsRecord holdingsRecord) {
+        HashMap<String, String> formerHoldingsIdMap = new HashMap<String, String>();
+        formerHoldingsIdMap.put("formerHoldingsId", formerHoldingsId);
+        if (holdingsRecord == null) {
+            Collection<HoldingsRecord> holdingsRecordCollection = getBusinessObjectService().findMatching(HoldingsRecord.class, formerHoldingsIdMap);
+            if (holdingsRecordCollection == null) {
+                DocstoreException docstoreException = new DocstoreValidationException(DocstoreResources.HOLDING_ID_NOT_FOUND, DocstoreResources.HOLDING_ID_NOT_FOUND);
+                docstoreException.addErrorParams("formerHoldingsId", formerHoldingsId);
+                throw docstoreException;
+            }
+            holdingsRecord = holdingsRecordCollection.iterator().next();
+        }
+        Holdings holdings = buildHoldingsFromHoldingsRecord(holdingsRecord);
+        if (bib == null) {
+            bib = RdbmsBibDocumentManager.getInstance().retrieveBib(holdingsRecord.getBibId());
+        }
+        holdings.setBib(bib);
+        Bibs bibs = retrieveBibRecordsFromBoundwith(holdingsRecord.getHoldingsId());
+        if (bibs != null && bibs.getBibs() != null && bibs.getBibs().size() > 0) {
+             holdings.setBoundWithBib(true);
+             holdings.setBibs(bibs);
+        }
+        List<HoldingsItemRecord> holdingsItemRecords = (List<HoldingsItemRecord>) getBusinessObjectService().findMatching(HoldingsItemRecord.class, getHoldingsMap(holdingsRecord.getHoldingsId()));
+        if (holdingsItemRecords != null && holdingsItemRecords.size() > 0) {
+            holdings.setSeries(true);
+        }
+        return holdings;
+    }
 }

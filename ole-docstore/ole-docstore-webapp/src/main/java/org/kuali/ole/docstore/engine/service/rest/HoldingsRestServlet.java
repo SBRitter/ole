@@ -6,6 +6,7 @@ import org.kuali.ole.docstore.common.exception.DocstoreException;
 import org.kuali.ole.docstore.common.exception.DocstoreExceptionProcessor;
 import org.kuali.ole.docstore.common.find.FindParams;
 import org.kuali.ole.docstore.common.service.DocstoreService;
+import org.kuali.ole.docstore.engine.service.DocstoreServiceImpl;
 import org.kuali.ole.docstore.service.BeanLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +49,11 @@ public class HoldingsRestServlet extends HttpServlet {
                 } else if (req.getPathInfo().startsWith("/doc/tree")) {
                     result = retrieveHoldingsTree(req);
                 } else if (req.getPathInfo().startsWith("/doc")) {
-                    result = retrieveHoldings(req);
+                    if (req.getParameter("holdingsId") != null) {
+                        result = retrieveHoldings(req);
+                    } else if (req.getParameter("formerHoldingsId") != null) {
+                        result = retrieveHoldingsByFormerHoldingsId(req);
+                    }
                 }
             } else {
                 if (req.getPathInfo().startsWith("/tree")) {
@@ -598,5 +603,24 @@ public class HoldingsRestServlet extends HttpServlet {
         return responseUrl + holdingsIds + unbindUrl;
     }
 
-
+    public String retrieveHoldingsByFormerHoldingsId(HttpServletRequest req) {
+        DocstoreServiceImpl ds = (DocstoreServiceImpl) BeanLocator.getDocstoreService();
+    	String formerHoldingsId = req.getParameter(("formerHoldingsId"));
+    	Holdings holdings = null;
+    	try {
+            holdings = ds.retrieveHoldingsByFormerHoldingsId(formerHoldingsId);
+    	} catch (DocstoreException e) {
+            LOG.error("Exception occurred in retrieveHoldings() :", e);
+            return DocstoreExceptionProcessor.toXml(e);
+        }
+        if (holdings.getHoldingsType().equalsIgnoreCase("print")) {
+            holdings = ds.retrieveHoldingsByFormerHoldingsId(formerHoldingsId);
+            Holdings pHoldings = new Holdings();
+            return pHoldings.serialize(holdings);
+        } else {
+             holdings = ds.retrieveHoldingsByFormerHoldingsId(formerHoldingsId);
+             Holdings eHoldings = new EHoldings();
+             return eHoldings.serialize(holdings);
+        }
+    }
 }
