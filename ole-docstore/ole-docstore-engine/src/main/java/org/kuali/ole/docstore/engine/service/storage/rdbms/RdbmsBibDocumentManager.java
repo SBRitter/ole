@@ -495,18 +495,50 @@ public class RdbmsBibDocumentManager extends RdbmsAbstarctDocumentManager {
         return bibs;
     }
     
-    protected Bib retrieveBibByFormerId(String id) {
-    	HashMap<String, String> formerIdMap = new HashMap<String, String>();
-        formerIdMap.put("formerId", id);
-        Collection<BibRecord> bibRecords = getBusinessObjectService().findMatching(BibRecord.class, formerIdMap);
-        if (bibRecords == null) {
-            DocstoreException docstoreException = new DocstoreValidationException(DocstoreResources.RECORD_NOT_FOUND,
-                    DocstoreResources.RECORD_NOT_FOUND);
-            docstoreException.addErrorParams("bibId", id);
-            throw docstoreException;
-        }
-        Bib bib = buildBibDocFromBibRecord(bibRecords.iterator().next());
-        return bib;        
-    }
+	protected Bib retrieveBibByFormerId(String id) {
+		HashMap<String, String> formerIdMap = new HashMap<String, String>();
+		formerIdMap.put("formerId", id);
+		Collection<BibRecord> bibRecords = getBusinessObjectService().findMatching(BibRecord.class, formerIdMap);
+		if (bibRecords == null) {
+			DocstoreException docstoreException = new DocstoreValidationException(DocstoreResources.RECORD_NOT_FOUND,
+					DocstoreResources.RECORD_NOT_FOUND);
+			docstoreException.addErrorParams("bibId", id);
+			throw docstoreException;
+		}
+		Bib bib = buildBibDocFromBibRecord(bibRecords.iterator().next());
+		return bib;
+	}
+
+	protected BibTree retrieveBibTreeByFormerId(String formerId) {
+		BibTree bibTree = new BibTree();
+		Bib bib = retrieveBibByFormerId(formerId);
+		String id = bib.getId();
+		bibTree.setBib(bib);
+		Map<String, String> holdingsMap = new HashMap<>();
+		RdbmsHoldingsDocumentManager holdingsDocumentManager = RdbmsHoldingsDocumentManager.getInstance();
+		List<HoldingsRecord> holdingsRecords = (List<HoldingsRecord>) getBusinessObjectService()
+				.findMatching(HoldingsRecord.class, getBibMap(id));
+		for (HoldingsRecord holdingsRecord : holdingsRecords) {
+			bibTree.getHoldingsTrees().add(
+					holdingsDocumentManager.retrieveHoldingsTree(holdingsRecord.getHoldingsId(), bib, holdingsRecord));
+			holdingsMap.put(holdingsRecord.getHoldingsId(), holdingsRecord.getHoldingsId());
+		}
+		List<BibHoldingsRecord> bibHoldingsRecords = (List<BibHoldingsRecord>) getBusinessObjectService()
+				.findMatching(BibHoldingsRecord.class, getBibMap(id));
+		if (bibHoldingsRecords != null && bibHoldingsRecords.size() > 0) {
+			for (BibHoldingsRecord bibHoldingsRecord : bibHoldingsRecords) {
+				if (!holdingsMap.containsKey(bibHoldingsRecord.getHoldingsId())) {
+					bibTree.getHoldingsTrees().add(
+							holdingsDocumentManager.retrieveHoldingsTree(bibHoldingsRecord.getHoldingsId(), bib, null));
+				}
+			}
+		}
+		return bibTree;
+	}
+	
+	public Object retrieveTreeByFormerId(String formerId) {
+		BibTree bibTree = retrieveBibTreeByFormerId(formerId);
+		return bibTree;
+	}
 
 }

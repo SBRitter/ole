@@ -645,6 +645,13 @@ public class DocstoreRDBMSStorageService implements DocstoreStorageService {
         Holdings holdings = (Holdings) rdbmsHoldingsDocumentManager.retrieveByFormerHoldingsId(formerHoldingsId);
         return holdings;
     }
+    
+	public BibTree retrieveBibTreeByFormerId(String formerId) {
+		RdbmsBibDocumentManager documentManager = null;
+		documentManager = RdbmsBibDocumentManager.getInstance();
+		BibTree bibTree = (BibTree) documentManager.retrieveTreeByFormerId(formerId);
+		return bibTree;
+	}
 
 }
 

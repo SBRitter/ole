@@ -1438,4 +1438,10 @@ public class DocstoreServiceImpl implements DocstoreService {
     	holdings.setFormat(DocFormat.OLEML.getCode());
     	return holdings;
     }
+    
+	public BibTree retrieveBibTreeByFormerId(String formerId) {
+		BibTree bibTree = ((DocstoreRDBMSStorageService) getDocstoreStorageService())
+				.retrieveBibTreeByFormerId(formerId);
+		return bibTree;
+	}
 }

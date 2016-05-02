@@ -56,8 +56,10 @@ public class HoldingsRestServlet extends HttpServlet {
                     }
                 }
             } else {
-                if (req.getPathInfo().startsWith("/tree")) {
+                if (req.getParameter("bibId") != null) {
                     result = retrieveHoldingsTrees(req);
+                } else if (req.getParameter("formerId") != null) {
+                     result = retrieveHoldingsTreesByFormerId(req);
                 }
             }
             out.print(result);
@@ -623,4 +625,36 @@ public class HoldingsRestServlet extends HttpServlet {
              return eHoldings.serialize(holdings);
         }
     }
+
+	public String retrieveHoldingsTreesByFormerId(HttpServletRequest req) throws IOException {
+		Map params = req.getParameterMap();
+		String[] formerIds = (String[]) params.get("formerId");
+		DocstoreService ds = BeanLocator.getDocstoreService();
+		StringBuilder holdingsTrees = new StringBuilder("<holdingsTrees>");
+		for (String formerId : formerIds) {
+			try {
+				BibTree bibTree = ((DocstoreServiceImpl) ds).retrieveBibTreeByFormerId(formerId);
+				if (!(bibTree.getHoldingsTrees().size() > 0))
+					holdingsTrees.append("holdings tree size is not greater 0");
+				if (bibTree != null && bibTree.getHoldingsTrees() != null && bibTree.getHoldingsTrees().size() > 0) {
+					for (HoldingsTree holdingsTree : bibTree.getHoldingsTrees()) {
+						holdingsTrees.append("\n" + "<holdingsTree>").append("\n");
+						holdingsTrees.append(holdingsTree.getHoldings().getContent());
+						holdingsTrees.append("<items>").append("\n");
+
+						for (Item item : holdingsTree.getItems()) {
+							holdingsTrees.append(item.getContent()).append("\n");
+						}
+						holdingsTrees.append("</items>").append("\n");
+						holdingsTrees.append("</holdingsTree>").append("\n");
+					}
+				}
+			} catch (DocstoreException e) {
+				LOG.error("Exception occurred in retrieveHoldingsTrees :", e);
+				return DocstoreExceptionProcessor.toXml(e);
+			}
+		}
+		holdingsTrees.append("</holdingsTrees>");
+		return holdingsTrees.toString();
+	}    
 }
